@@ -1,5 +1,3 @@
-#include <stdio.h>
-#define printf(...)
 
 #include "obmq.h"
 
@@ -43,7 +41,6 @@ char obmq_get_next_bitstate(OneBitMessageQueue * m)
 	// that is so, if the inter-message clocks have been played
 	if(ISINTERMESSAGE(m) && m->mInterMessageClocks*2 <= m->mCurrentInBit)
 	{
-printf("new message\n");
 		// can we no longer repeat the previous one?
 		if(m->mCurrentMsgRepeat >= m->mRepeatMsg) {
 			char newMsg;
@@ -63,14 +60,11 @@ printf("new message\n");
 		m->mCurrentInBit = 0;
 	};
 
-printf("bit %d inbit %d\n", (int)m->mCurrentBit, (int)m->mCurrentInBit);
 	if(ISINTERMESSAGE(m)) {
-printf("  inter-message\n");
 		newValue = m->mCurrentInBit & 1;
 		++(m->mCurrentInBit);
 	} else if(m->mCurrentMessage != m->mNextMessage) { /* valid message */
 		if(ISINTERBIT(m)) {
-printf("  end-bits\n");
 			newValue = m->mCurrentInBit & 1;
 			if(ISINTERBIT_END(m)) {
 				m->mCurrentInBit = 0;
@@ -79,7 +73,6 @@ printf("  end-bits\n");
 				++(m->mCurrentInBit);
 			}
 		} else {
-printf("  in-bit\n");
 			newValue = m->mMessages[m->mCurrentMessage] >> (7-m->mCurrentBit) & 1;
 			++(m->mCurrentInBit);
 		}

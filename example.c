@@ -28,6 +28,8 @@ int main()
 	obmq_queuemessage(&m, 'g');
 	obmq_queuemessage(&m, '!');
 
+	sleep(1);
+
 	while(1) {
 		// main event loop
 		// [...] do some stuff

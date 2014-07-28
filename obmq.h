@@ -4,7 +4,7 @@
 #ifndef _OBMQ_H_
 # define _OBMQ_H_
 
-# define OBMQ_MESSAGE_QUEUE 64
+# define OBMQ_MESSAGE_QUEUE 16
 
 typedef struct {
 	// parameters
