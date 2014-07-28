@@ -9,7 +9,11 @@ static unsigned time = 0;
 void setchan(char value)
 {
 #if 0
-	printf("%d %c\n", time, (value)?'1':'0');
+	// for gnuplot testing:
+	static char v;
+	printf("%d %d\n", time*2, v);
+	v = value;
+	printf("%d %d\n", time*2+1, v);
 #else
 	printf("%c\n", (value)?'1':'0');
 #endif
@@ -31,8 +35,7 @@ int main()
 	sleep(1);
 
 	while(1) {
-		// main event loop
-		// [...] do some stuff
+		// [...]
 
 		obmq_trigger(&m);
 
