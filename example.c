@@ -21,14 +21,12 @@ int main()
 	OneBitMessageQueue m;
 	obmq_init(&m, setchan, 0, 0, 3, 8);
 
-#if 1
 	obmq_queuemessage(&m, 'd');
-	obmq_queuemessage(&m, 'a');
-	obmq_queuemessage(&m, 'v');
-	obmq_queuemessage(&m, 'i');
-	obmq_queuemessage(&m, 'd');
+	obmq_queuemessage(&m, 'e');
+	obmq_queuemessage(&m, 'b');
+	obmq_queuemessage(&m, 'u');
+	obmq_queuemessage(&m, 'g');
 	obmq_queuemessage(&m, '!');
-#endif
 
 	while(1) {
 		// main event loop
@@ -36,7 +34,7 @@ int main()
 
 		obmq_trigger(&m);
 
-		usleep(50000);
+		usleep(100000);
 		++time;
 	}
 }

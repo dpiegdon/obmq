@@ -31,7 +31,7 @@ char obmq_get_next_bitstate(OneBitMessageQueue * m)
 {
 	char newValue = 2;
 
-	if(m->started <= 3) {
+	if(m->started <= 2*(m->mInterMessageClocks+1)) {
 		if(obmq_messages_queued(m)) {
 			newValue = m->started & 1;
 			m->started++;
