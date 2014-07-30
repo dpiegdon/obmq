@@ -6,7 +6,7 @@
 
 static unsigned time = 0;
 
-void setchan(char value)
+void setchan(void * data, char value)
 {
 #if 0
 	// for gnuplot testing:
@@ -23,23 +23,23 @@ void setchan(char value)
 int main()
 {
 	OneBitMessageQueue m;
-	obmq_init(&m, setchan, 0, 0, 3, 8);
+	char message[] = {1, 2, 3, 4, 5, 6};
+	char *p = message;
 
-	obmq_queuemessage(&m, 'd');
-	obmq_queuemessage(&m, 'e');
-	obmq_queuemessage(&m, 'b');
-	obmq_queuemessage(&m, 'u');
-	obmq_queuemessage(&m, 'g');
-	obmq_queuemessage(&m, '!');
-
+	obmq_init(&m, setchan, NULL, 0, 0, 3, 8);
 	sleep(1);
 
 	while(1) {
-		// [...]
+		if(*p && obmq_messages_free(&m)) {
+			fprintf(stderr, "free %u queued %u.\n", obmq_messages_free(&m), obmq_messages_queued(&m));
+			obmq_queuemessage(&m, *p);
+			fprintf(stderr, "queued message %u.\n", (unsigned)*p);
+			++p;
+		}
 
 		obmq_trigger(&m);
 
-		usleep(100000);
+		usleep(50000);
 		++time;
 	}
 }
