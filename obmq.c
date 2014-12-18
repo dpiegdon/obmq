@@ -116,7 +116,7 @@ void obmq_trigger(OneBitMessageQueue * m)
 	m->mCurrentSlowdown = m->mSlowdown;
 
 	char bit = obmq_get_next_bitstate(m);
-	if(m->mCurrentValue != bit && bit >= 0 && bit <= 1) {
+	if(m->mCurrentValue != bit && (0 == bit || 1 == bit)) {
 		m->mCurrentValue = bit;
 		m->mSetChan(m->mSetChanData, bit);
 	}
