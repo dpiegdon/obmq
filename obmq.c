@@ -54,7 +54,7 @@ void obmq_init(OneBitMessageQueue * m, void(*set_channel_value)(void*, char), vo
 #define NEXTBIT(m) { (m)->mCurrentBit++; (m)->mCurrentInBit = 0; }
 #define NEXTINTERBIT(m) { (m)->mCurrentInBit++; }
 
-char obmq_get_next_bitstate(OneBitMessageQueue * m)
+static char obmq_get_next_bitstate(OneBitMessageQueue * m)
 {
 	char newValue = 2;
 
