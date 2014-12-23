@@ -23,12 +23,19 @@ static inline void obmq_pokemessage(OneBitMessageQueue *m, char message)
 static inline void obmq_freemessage(OneBitMessageQueue *m)
 {
 	unsigned nextMessage = obmq_buffer_next_index(m->mCurrentMessage);
-	if(m->mNextMessage != nextMessage)
+	if(m->mNextMessage != nextMessage) {
 		m->mCurrentMessage = nextMessage;
+	} else {
+		// there are no more messages in the buffer
+		if(!m->mInfiniteRepeat) {
+			m->mCurrentMessage = nextMessage;
+			m->mStarted = 0;
+		}
+	}
 }
 
 
-void obmq_init(OneBitMessageQueue * m, void(*set_channel_value)(void*, char), void * set_channel_data, unsigned slowdown, unsigned repeat_message, char inter_message_clocks, char bitlength)
+void obmq_init(OneBitMessageQueue * m, void(*set_channel_value)(void*, char), void * set_channel_data, unsigned slowdown, unsigned repeat_message, char inter_message_clocks, char bitlength, char infinite_repeat)
 {
 	m->mSetChan = set_channel_value;
 	m->mSetChanData = set_channel_data;
@@ -36,8 +43,9 @@ void obmq_init(OneBitMessageQueue * m, void(*set_channel_value)(void*, char), vo
 	m->mRepeatMsg = repeat_message;
 	m->mInterMessageClocks = inter_message_clocks;
 	m->mBitLength = 2*bitlength;
+	m->mInfiniteRepeat = infinite_repeat;
 
-	m->started = 0;
+	m->mStarted = 0;
 	m->mCurrentSlowdown = 0;
 	m->mCurrentMessage = 0;
 	m->mNextMessage = 0;
@@ -58,10 +66,10 @@ static char obmq_get_next_bitstate(OneBitMessageQueue * m)
 {
 	char newValue = 2;
 
-	if(m->started <= 2*(m->mInterMessageClocks+1)) {
+	if(m->mStarted <= 2*(m->mInterMessageClocks+1)) {
 		if(obmq_messages_queued(m)) {
-			newValue = m->started & 1;
-			m->started++;
+			newValue = m->mStarted & 1;
+			m->mStarted++;
 		};
 		return newValue;
 	}
@@ -98,7 +106,7 @@ static char obmq_get_next_bitstate(OneBitMessageQueue * m)
 			++(m->mCurrentInBit);
 		}
 	} else {
-		// no message was ever queued
+		// no message queued
 	}
 
 	return newValue;

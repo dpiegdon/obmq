@@ -22,18 +22,20 @@ typedef struct {
 	char mRepeatMsg;
 	char mInterMessageClocks;
 	char mBitLength;
+	char mInfiniteRepeat;
 	// state
-	char started;
-	char mCurrentSlowdown;
+	char mStarted;			// counter for start-flashes
+	char mCurrentSlowdown;		// counter for trigger slowdown
 	char mMessages[OBMQ_MESSAGE_QUEUE];
-	unsigned mCurrentMessage;
-	unsigned mNextMessage;
-	char mCurrentMsgRepeat;
-	char mCurrentBit;	// 0..7 are for a message; 8 is inter-message
-	char mCurrentInBit;	// in Msg: 0..BIT_LEN-1 are in bits;
-				//         BIT_LEN..BIT_LEN+1 is inter-bit
-				// InterMessage: 0..INTERMESSAGE_CLOCKS*2
-	char mCurrentValue;
+					// message buffer
+	unsigned mCurrentMessage;	// message that currently is being displayed
+	unsigned mNextMessage;		// message that will be displayed next
+	char mCurrentMsgRepeat;		// counter for repeat of current message
+	char mCurrentBit;		// 0..7 are for a message; 8 is inter-message
+	char mCurrentInBit;		// in Msg: 0..BIT_LEN-1 are in bits;
+					//         BIT_LEN..BIT_LEN+1 is inter-bit
+					// InterMessage: 0..INTERMESSAGE_CLOCKS*2
+	char mCurrentValue;		// the value that was last sent
 } OneBitMessageQueue;
 
 // Initialise a queue
@@ -45,7 +47,8 @@ typedef struct {
 //	inter_message_clocks		how many clocks between a message?
 //					(effectively is one more due to inter-bit-clock)
 //	bitlength			length of a bit in clocks
-void obmq_init(OneBitMessageQueue * m, void(*set_channel_value)(void*, char), void * set_channel_data, unsigned slowdown, unsigned repeat_message, char inter_message_clocks, char bitlength);
+//	infinite_repeat			boolean: repeat last element until a new one is queued?
+void obmq_init(OneBitMessageQueue * m, void(*set_channel_value)(void*, char), void * set_channel_data, unsigned slowdown, unsigned repeat_message, char inter_message_clocks, char bitlength, char infinite_repeat);
 
 // Trigger in EventLoop
 void obmq_trigger(OneBitMessageQueue * m);

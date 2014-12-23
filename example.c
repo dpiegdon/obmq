@@ -26,7 +26,7 @@ int main()
 	char message[] = {1, 2, 3, 4, 5, 6};
 	char *p = message;
 
-	obmq_init(&m, setchan, NULL, 0, 0, 3, 8);
+	obmq_init(&m, setchan, NULL, 0, 0, 0, 8, 0);
 	sleep(1);
 
 	while(1) {
