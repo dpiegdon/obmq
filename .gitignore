@@ -1,2 +1,10 @@
 *.o
-example
+example/example
+lkml/.*.ko.cmd
+lkml/.*.mod.o.cmd
+lkml/.*.o.cmd
+lkml/.tmp_versions
+lkml/Module.symvers
+lkml/*.ko
+lkml/*.mod.c
+lkml/modules.order

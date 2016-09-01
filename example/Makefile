@@ -1,5 +1,7 @@
 .PHONY: clean all
 
+CFLAGS += -Wall -Werror -Wpedantic
+
 all: example
 
 example: example.c obmq.c obmq.h
