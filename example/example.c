@@ -6,13 +6,15 @@
 
 static unsigned time = 0;
 
-//#define PLOTTABLE_OUTPUT
-//#define DEBUG_QUEUE
+/*
+#define PLOTTABLE_OUTPUT
+#define DEBUG_QUEUE
+*/
 
 void setchan(void * data, char value)
 {
 #ifdef PLOTTABLE_OUTPUT
-	// for gnuplot testing:
+	/* for gnuplot testing: */
 	static char v;
 	printf("%d %d\n", time*2, v);
 	v = value;

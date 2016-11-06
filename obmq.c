@@ -30,7 +30,7 @@ extern "C" {
 
 #include "obmq.h"
 
-static inline unsigned obmq_buffer_next_index(unsigned index)
+static inline OBMQ_UNSIGNED_TYPE obmq_buffer_next_index(OBMQ_UNSIGNED_TYPE index)
 {
 	return (index+1 < OBMQ_MESSAGE_QUEUE) ? index+1 : 0;
 }
@@ -47,11 +47,11 @@ static inline void obmq_pokemessage(OneBitMessageQueue *m, char message)
 
 static inline void obmq_freemessage(OneBitMessageQueue *m)
 {
-	unsigned nextMessage = obmq_buffer_next_index(m->mCurrentMessage);
+	OBMQ_UNSIGNED_TYPE nextMessage = obmq_buffer_next_index(m->mCurrentMessage);
 	if(m->mNextMessage != nextMessage) {
 		m->mCurrentMessage = nextMessage;
 	} else {
-		// there are no more messages in the buffer
+		/* there are no more messages in the buffer */
 		if(!m->mInfiniteRepeat) {
 			m->mCurrentMessage = nextMessage;
 			m->mStarted = 0;
@@ -60,7 +60,7 @@ static inline void obmq_freemessage(OneBitMessageQueue *m)
 }
 
 
-void obmq_init(OneBitMessageQueue * m, void(*set_channel_value)(void*, char), void * set_channel_data, unsigned slowdown, unsigned repeat_message, char inter_message_clocks, char bitlength, char infinite_repeat)
+void obmq_init(OneBitMessageQueue * m, void(*set_channel_value)(void*, char), void * set_channel_data, OBMQ_UNSIGNED_TYPE slowdown, OBMQ_UNSIGNED_TYPE repeat_message, char inter_message_clocks, char bitlength, char infinite_repeat)
 {
 	m->mSetChan = set_channel_value;
 	m->mSetChanData = set_channel_data;
@@ -99,11 +99,12 @@ static char obmq_get_next_bitstate(OneBitMessageQueue * m)
 		return newValue;
 	}
 
-	// do we need to get a new message?
-	// that is so, if the inter-message clocks have been played
+	/* do we need to get a new message?
+	 * that is so, if the inter-message clocks have been played
+	 */
 	if(ISINTERMESSAGE(m) && m->mInterMessageClocks*2 <= m->mCurrentInBit)
 	{
-		// can we no longer repeat the previous one?
+		/* can we no longer repeat the previous one? */
 		if(m->mCurrentMsgRepeat >= m->mRepeatMsg) {
 			m->mCurrentMsgRepeat = 0;
 			obmq_freemessage(m);
@@ -131,7 +132,7 @@ static char obmq_get_next_bitstate(OneBitMessageQueue * m)
 			++(m->mCurrentInBit);
 		}
 	} else {
-		// no message queued
+		/* no message queued */
 	}
 
 	return newValue;
@@ -165,12 +166,12 @@ void obmq_queuemessage(OneBitMessageQueue * m, char message)
 	m->mNextMessage = obmq_buffer_next_index(m->mNextMessage);
 }
 
-unsigned obmq_messages_queued(OneBitMessageQueue * m)
+OBMQ_UNSIGNED_TYPE obmq_messages_queued(OneBitMessageQueue * m)
 {
 	return (OBMQ_MESSAGE_QUEUE + m->mNextMessage - m->mCurrentMessage) % OBMQ_MESSAGE_QUEUE;
 }
 
-unsigned obmq_messages_free(OneBitMessageQueue * m)
+OBMQ_UNSIGNED_TYPE obmq_messages_free(OneBitMessageQueue * m)
 {
 	return OBMQ_MESSAGE_QUEUE - obmq_messages_queued(m) - 1;
 }
